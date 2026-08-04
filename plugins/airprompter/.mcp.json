@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "airprompter": {
+      "type": "http",
+      "url": "https://mcp.airprompter.com/mcp"
+    }
+  }
+}

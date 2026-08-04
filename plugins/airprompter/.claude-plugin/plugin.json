@@ -1,0 +1,19 @@
+{
+  "name": "airprompter",
+  "version": "0.1.0",
+  "description": "Create, run, and improve AirPrompter workflows from Claude.",
+  "author": {
+    "name": "AirPrompter",
+    "url": "https://airprompter.com"
+  },
+  "homepage": "https://airprompter.com",
+  "repository": "https://github.com/airprompter/airprompter-claude-marketplace",
+  "license": "UNLICENSED",
+  "keywords": [
+    "airprompter",
+    "prompts",
+    "workflows",
+    "mcp"
+  ],
+  "displayName": "AirPrompter"
+}

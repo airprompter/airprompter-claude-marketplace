@@ -1,0 +1,16 @@
+{
+  "name": "airprompter",
+  "owner": {
+    "name": "AirPrompter",
+    "url": "https://airprompter.com"
+  },
+  "plugins": [
+    {
+      "name": "airprompter",
+      "source": "./plugins/airprompter",
+      "description": "Create, run, and improve AirPrompter workflows from Claude.",
+      "version": "0.1.0",
+      "category": "productivity"
+    }
+  ]
+}
