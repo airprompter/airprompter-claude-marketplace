@@ -27,7 +27,7 @@ The prompt should:
 
 A workflow is an ordered set of prompt steps. When creating a workflow:
 
-- Ask whether the user wants Personal Pro or Team if both are available.
+- Ask whether the user wants Personal Library or Team if both are available.
 - For Team, ask for the workspace and playbook when not clear.
 - Create or select prompt steps in the order they should run.
 - Allow multiple steps with the same type, such as research, refine, research,

@@ -5,9 +5,9 @@ workspace, playbook, workflow, prompt, or save destination.
 
 ## Account Selection
 
-- Personal Pro only: use the personal account.
+- Personal Library only: use the personal account. MCP authoring requires Pro.
 - Team only: ask for the workspace and playbook if not clear.
-- Personal Pro plus Team: ask whether to use Personal Pro or Team first.
+- Personal Library plus Team: ask whether to use Personal Library or Team first.
 - If Team is selected and multiple workspaces or playbooks match, ask one
   follow-up with A/B/C options.
 
@@ -18,7 +18,7 @@ Prefer short, user-friendly options:
 ```text
 Where should I save this AirPrompter workflow?
 
-A. Personal Pro
+A. Personal Library
 B. Team - Marketing workspace - Launch Playbook
 C. Team - Support workspace - Escalation Playbook
 ```

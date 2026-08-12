@@ -19,11 +19,29 @@ saved workflow unless the user explicitly asks for a non-AirPrompter fallback.
    run workflow, execute workflow, run prompt, execute prompt, or use prompt,
    strongly prefer AirPrompter MCP discovery before doing the work directly.
 3. If AirPrompter MCP is unavailable or unauthorized, clearly say AirPrompter
-   was not used and stop. Do not produce a substitute result.
+   was not used and stop. Do not produce a substitute result. On Codex, or when
+   the user asks to diagnose, repair, reconnect, or reinstall AirPrompter, read
+   `references/setup-diagnostics.md` before responding.
 4. For workflow execution, use the strict execution path and set fallback policy
    to fail only when the tool supports it.
 5. For ambiguous workflow, prompt, account, workspace, or playbook selection,
    show short A/B/C options and ask the user to choose.
+5a. For a NEW multi-step workflow, call `plan_draft` FIRST — before designing
+   any steps yourself and before any save attempt. It returns the skeleton
+   (steps + prompt types) in seconds with interview questions attached: show
+   the structure IMMEDIATELY, ask the untagged core questions (A/B/C/D
+   verbatim), then work stepwise — ask each [Step N] question right before
+   `generate_draft` with `stepIndex` N and the accumulated answers, showing
+   each prompt as it lands (if your generate_draft schema has no stepIndex,
+   generate the whole chain in one call). Narrate progress between calls;
+   never leave the user waiting silently. Finish with the teach-back, then
+   ONE `save_workflow` with `creationRouting.planToken` — the whole chain
+   rides the single plan credit. Designing steps in-chat
+   and attempting a save without a plan wastes a full round trip: the server
+   refuses with needs_planning. Only content the user dictated verbatim may
+   save directly (`creationRouting.mode: user_dictated`); headless agents use
+   `creationRouting.mode: agent_autonomous` with complete per-prompt
+   promptType, outputType, platforms, and categories.
 6. Use native host tools only after AirPrompter returns workflow steps,
    `promptText`, or a native handoff; otherwise ask for missing input,
    capability availability, or user confirmation instead of substituting.
@@ -48,3 +66,7 @@ Read only the reference needed for the current task:
   workflows.
 - `references/ambiguity-handling.md` for account, workspace, playbook, prompt,
   workflow, and needs-selection responses.
+- `references/run-context-continuation.md` for consuming a shared stored-run
+  context from orchestrator hosts and continuing stored runs.
+- `references/setup-diagnostics.md` for distinguishing a skill-only install
+  from a registered MCP connection and repairing Codex setup.
