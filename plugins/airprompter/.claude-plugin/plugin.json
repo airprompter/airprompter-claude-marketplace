@@ -1,7 +1,7 @@
 {
   "name": "airprompter",
   "version": "0.1.0",
-  "description": "Create, run, and improve AirPrompter workflows from Claude.",
+  "description": "AirPrompter connects Claude to your saved prompt and workflow library. Create, run, and improve reusable multi-step AI workflows: a guided interview captures how YOU do a task (your sources, judgments, and quality bar), generates each workflow step as a purpose-built prompt, and saves it to your library for repeatable runs across your AI tools. Includes secure OAuth sign-in to the AirPrompter MCP server for authenticated reads, writes, and workflow runs.",
   "author": {
     "name": "AirPrompter",
     "url": "https://airprompter.com"

@@ -26,25 +26,22 @@ saved workflow unless the user explicitly asks for a non-AirPrompter fallback.
    to fail only when the tool supports it.
 5. For ambiguous workflow, prompt, account, workspace, or playbook selection,
    show short A/B/C options and ask the user to choose.
-5a. For a NEW multi-step workflow, call `plan_draft` FIRST — before designing
-   any steps yourself and before any save attempt. It returns the skeleton
-   (steps + prompt types) in seconds with interview questions attached: show
-   the structure IMMEDIATELY, ask the untagged core questions (A/B/C/D
-   verbatim), then work stepwise — ask each [Step N] question right before
-   `generate_draft` with `stepIndex` N and the accumulated answers, showing
-   each prompt as it lands (if your generate_draft schema has no stepIndex,
-   generate the whole chain in one call). Narrate progress between calls;
-   never leave the user waiting silently. Finish with the teach-back, then
-   ONE `save_workflow` with `creationRouting.planToken` — the whole chain
-   rides the single plan credit. Designing steps in-chat
-   and attempting a save without a plan wastes a full round trip: the server
-   refuses with needs_planning. Only content the user dictated verbatim may
-   save directly (`creationRouting.mode: user_dictated`); headless agents use
+5a. For a NEW multi-step workflow, call `plan_draft` to get the deterministic
+   step plan and bounded interview, ask its unanswered questions verbatim,
+   then call `generate_draft` with the plan and answers to get the authoring
+   brief. Author and review each prompt in the calling agent, teach the chain
+   back, then call `save_workflow` ONCE with `creationRouting.mode:
+   host_planned` and a one-paragraph `interviewSummary`. These planning tools
+   are read-only, available on every tier, call no model, and consume no
+   credit. Use `improve_workflow` for a read-only deterministic audit of an
+   existing workflow; persist accepted revisions separately through
+   `update_workflow` or `update_prompt`. Only content the user dictated
+   verbatim uses `creationRouting.mode: user_dictated`; headless agents use
    `creationRouting.mode: agent_autonomous` with complete per-prompt
    promptType, outputType, platforms, and categories.
-6. Use native host tools only after AirPrompter returns workflow steps,
-   `promptText`, or a native handoff; otherwise ask for missing input,
-   capability availability, or user confirmation instead of substituting.
+6. For saved prompt/workflow EXECUTION, use native host tools only after
+   AirPrompter returns workflow steps, `promptText`, or a native handoff. This
+   does not prohibit host-side AUTHORING under rule 5a.
 
 ## MCP Boundary
 
@@ -53,6 +50,31 @@ ambiguity handling, and host behavior. Any actual AirPrompter operation must go
 through available AirPrompter MCP tools such as workflow discovery, workflow
 execution, prompt creation, prompt updates, workflow creation, or workflow
 updates.
+
+## Authoring Thresholds
+
+Before saving a prompt or workflow, verify all of these without a backend-model
+call:
+
+- Keep every prompt at or below 4,000 characters.
+- Give every prompt a 3-8 word title and a one-sentence description.
+- Use `{{snake_case}}` only for values that change each run; never use
+  `{{previous_output}}`.
+- State the output format, tone, and a tight length or item limit inside every
+  prompt.
+- Use one prompt when a single coherent responsibility can accomplish the North
+  Star without becoming overloaded. Use a workflow when intermediate outputs
+  add value.
+- Keep each prompt or workflow step cohesive, bounded, independently testable,
+  and responsible for one meaningful output or decision.
+- Split at distinct expertise, tool, input, output-contract, evaluation, retry,
+  or approval boundaries. Combine only pass-through, restatement, or
+  reformatting steps. Never merge independent responsibilities merely to reduce
+  step count. There is no fixed maximum.
+- When a step consumes earlier work, reference that result in prose and state
+  the producing step's output contract.
+- Supply promptType, outputType, platforms, and categories for every workflow
+  prompt, plus the workflow-level outputType.
 
 ## References
 
@@ -70,3 +92,5 @@ Read only the reference needed for the current task:
   context from orchestrator hosts and continuing stored runs.
 - `references/setup-diagnostics.md` for distinguishing a skill-only install
   from a registered MCP connection and repairing Codex setup.
+- `references/skill-import.md` for importing SKILL.md packs or public skill
+  links into AirPrompter workflows and installing pointer skills.
