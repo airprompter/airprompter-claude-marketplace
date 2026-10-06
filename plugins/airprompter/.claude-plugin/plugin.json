@@ -7,6 +7,7 @@
     "url": "https://airprompter.com"
   },
   "homepage": "https://airprompter.com",
+  "icon": "./.claude-plugin/icon.png",
   "privacyPolicyUrl": "https://airprompter.com/privacy",
   "repository": "https://github.com/airprompter/airprompter-claude-marketplace",
   "license": "UNLICENSED",
