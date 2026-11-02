@@ -1,0 +1,7 @@
+#!/bin/sh
+# Bundled installer entrypoint. Missing Python means remote fallback, never runtime installation.
+if ! command -v python3 >/dev/null 2>&1; then
+  printf '%s\n' '{"status":"unavailable","code":"python3_required"}'
+  exit 1
+fi
+exec python3 -B "$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/install_runtime.py" install "$@"

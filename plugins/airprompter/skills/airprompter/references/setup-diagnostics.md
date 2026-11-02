@@ -1,64 +1,33 @@
 # Setup Diagnostics
 
-Use this reference when AirPrompter tools are missing, or when the user asks to
-diagnose, repair, reconnect, or reinstall AirPrompter in Codex.
+Use this reference when AirPrompter tools are missing, or when the user asks
+to diagnose, repair, reconnect, or reinstall AirPrompter in Claude Code.
 
-## Customer Install Rule
+## Readiness Layers
 
-For the official AirPrompter plugin, installation comes from the universal
-plugin directory shared by ChatGPT and Codex. The host registers the bundled
-MCP connection and prompts the customer for AirPrompter OAuth during install.
-Do not ask a customer to run `codex mcp add`, edit `config.toml`, add a Git
-marketplace, or install a separate MCP entry.
+Treat the plugin, its bundled MCP server, the OAuth session, and the live
+tool inventory as separate states. A Skill-only install cannot call AirPrompter.
 
-If an official-directory install is present but tools are unavailable, use the
-host's Plugins or Connectors UI to reconnect AirPrompter OAuth, then start a new
-task. If the host still does not expose the bundled tools, report a plugin-host
-integration failure for support; do not turn internal CLI repair into the
-customer onboarding path.
+1. Run `/plugin` and confirm the `airprompter` plugin is installed and enabled.
+2. Run `/mcp` and confirm the bundled server `airprompter` points at
+   `https://mcp.airprompter.com/mcp`; select it and authenticate if it has not signed in.
+3. Run `diagnose_connection` before executing a saved workflow. Tool
+   discovery alone does not prove authentication.
+4. Start a new Claude Code session after installing or reconnecting so it
+   loads the AirPrompter tools.
 
-## Local Development Readiness Rule
+## Customer Installation
 
-For private dev and local-marketplace installs, do not infer MCP readiness from
-the AirPrompter skill being present or from
-`codex plugin list` showing the plugin as installed. The plugin, skill, MCP
-registration, and OAuth session are separate states. A healthy Codex setup must
-have both the plugin and the matching MCP server entry.
+Install AirPrompter from its Claude Code plugin marketplace (`/plugin`), then
+approve AirPrompter account authorization when Claude Code prompts. Customers
+must not paste tokens, run `claude mcp add`, or register a second MCP server.
 
-Choose the identity from the installed plugin:
+## Reconnect
 
-- `airprompter-dev@airprompter-dev` uses server `airprompter_dev`, URL
-  `https://mcp.dev.airprompter.com/mcp`, and OAuth resource
-  `https://mcp.dev.airprompter.com`.
-- `airprompter@airprompter` uses server `airprompter`, URL
-  `https://mcp.airprompter.com/mcp`, and OAuth resource
-  `https://mcp.airprompter.com`.
+If tools return Unauthorized after a completed login, run `/mcp`, reconnect
+AirPrompter, and start a new session. Plugin reinstall and MCP
+authentication are independent.
 
-## Codex Local Diagnostic And Repair
-
-1. Run `codex plugin list` and confirm the expected plugin is installed and
-   enabled.
-2. Run `codex mcp get <server-name>`. If it succeeds with the expected URL, the
-   MCP server is registered. Do not claim OAuth is healthy from plugin status
-   alone.
-3. If the MCP entry is missing and the user explicitly asked to repair setup,
-   run:
-
-   ```text
-   codex mcp add <server-name> --url <mcp-url> --oauth-resource <oauth-resource>
-   ```
-
-   This may start OAuth automatically. If authorization does not finish, run:
-
-   ```text
-   codex mcp login <server-name> --scopes prompts.read,prompts.write
-   ```
-
-4. Run `codex mcp get <server-name>` again and confirm the expected URL.
-5. Start a new Codex task before testing an AirPrompter workflow because a
-   running task's tool inventory is fixed when that task starts.
-
-Prefer the Codex CLI over editing `config.toml` directly. Never print OAuth
-codes or tokens. If the user only asked to run a workflow and did not authorize
-setup repair, stop after reporting the missing MCP registration and the exact
-repair command; do not generate a substitute workflow result.
+If the person only asked to run a workflow and did not ask for setup repair,
+stop after reporting what is missing and how to fix it; do not produce a
+substitute result.

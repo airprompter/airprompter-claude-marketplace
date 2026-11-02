@@ -3,13 +3,22 @@
 Use this reference when AirPrompter needs the user to choose an account,
 workspace, playbook, workflow, prompt, or save destination.
 
-## Account Selection
+## Connection and Destination Selection
 
-- Personal Library only: use the personal account. MCP authoring requires Pro.
-- Team only: ask for the workspace and playbook if not clear.
-- Personal Library plus Team: ask whether to use Personal Library or Team first.
-- If Team is selected and multiple workspaces or playbooks match, ask one
-  follow-up with A/B/C options.
+Read `connection-selection.md` in this directory for environment, connector,
+linked-account selection and continuity before selecting customer resources.
+Resolve those independently from Personal/Team/workspace/Playbook destination.
+Use explicit instructions and established session context before asking anything.
+
+- Use the server's supported destination selection response and returned IDs.
+  Do not assume Personal Library means a separate "personal account" or that
+  every Team operation needs a Playbook.
+- If the requested destination is unresolved, ask one concise question using
+  available friendly labels. Reuse a prior selection when it remains valid.
+- If several workspaces or Playbooks match, ask only for the remaining choice;
+  do not repeat account or environment questions already answered.
+- Respect missing permissions or unsupported destinations; do not silently fall
+  back to another account, Team, or Personal Library.
 
 ## Selection Format
 
@@ -29,6 +38,6 @@ user asks for diagnostics or support details.
 ## Write Scope Problems
 
 If a write tool reports missing `prompts.write`, say the AirPrompter connection
-needs write permission and ask the user to reconnect the MCP entry with read and
-write scopes. Do not present this as if the workflow content cannot be saved
+needs write permission. Explain that reconnecting with the required read and
+write scopes is a separate user-authorized repair; do not reconnect automatically. Do not present this as if the workflow content cannot be saved
 because of user error.

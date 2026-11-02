@@ -18,13 +18,24 @@ run context and must decide how to carry a stored run's context forward.
 
 - Offer to continue the stored run when the context shows incomplete steps and
   the user's request targets the same workflow.
-- Start a fresh run when the stored run is complete, the request targets a
-  different workflow, or the context version is unsupported.
+- A completed stored run cannot continue. Start fresh only when the user asks
+  to run again or the new request requires a new run. If the context version is
+  unsupported, stop interpretation; rediscover the workflow through MCP only
+  when the user has requested a fresh execution.
 - Never fabricate missing step outputs. If an output is absent, say the stored
-  run did not persist it and ask whether to re-run that step.
+  run did not persist it. A missing output is not permission to repeat an outside
+  effect; verify its outcome or obtain explicit retry direction first.
+- Retain the original connector/environment/account binding. A shared DTO is
+  context, not authorization to transfer its run ID to another connection.
+- Read authoritative state before continuation and dispatch using the server
+  response as [workflow execution](workflow-execution.md) describes. Routed
+  occurrences, versions, eligible targets, and finite budgets come from the
+  routed get response, never from stored step ordering or inferred graphs.
+- Reading context or run status does not authorize advancing or re-executing.
+  Paused and failed runs follow their explicit stop rules; no silent resume.
 
 ## Ambiguity
 
 If it is unclear whether to continue or start fresh, or which stored run the
 user means, show short A/B/C options using the selection format in
-`references/ambiguity-handling.md`.
+[ambiguity handling](ambiguity-handling.md).
