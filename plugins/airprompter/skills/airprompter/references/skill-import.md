@@ -10,7 +10,7 @@ through this import.
 
 - Use AirPrompter MCP. Do not recreate the skill as a local prompt chain.
 - Prefer `files[]` when the host already has skill markdown.
-- Use `sourceUrl` only for an allowlisted public skill link.
+- Use `sourceUrl` for a public skill link.
 - Call `preview_skill_import` first. Show fitness notes (`importable`,
   `adapted`, or `skipped`) and unresolved references.
 - Import the files as they are: show the preview's notes and instructions
@@ -115,5 +115,5 @@ Shortcut to the user's AirPrompter skill "<skill name>". Run it through AirPromp
 - Do not treat importing an existing skill as `plan_draft` / `generate_draft`
   interview UX; authoring a new one is (see `skill-authoring.md`).
 - Do not invent `{{previous_output}}` placeholders.
-- Do not fetch off-allowlist URLs or private-network hosts.
+- Do not fetch private-network hosts.
 - Do not substitute a local rewrite when import or execution fails.

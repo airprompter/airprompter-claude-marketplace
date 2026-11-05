@@ -79,12 +79,14 @@ Any shape whose instructions you write yourself runs `agent_driven`.
 - **Instructions**: loaded whole when the skill triggers, so keep them short.
   Role, Task (what to ask for first), Steps, Assets and Scripts (only when the
   skill has files), Example, Output. Say when to read each reference, by its
-  title or `references/<file>.md`, and the condition that calls for it. Keep
+  exact `references/<file>.md` path AND title, its purpose, and the condition
+  that calls for it. Keep
   references one level deep and use relative forward-slash paths. Do not tell
   the agent to read every reference in order unless every step always runs in
   that order.
 - **References**: one responsibility and one output each, self-contained, at
-  most 4,000 characters, with the output it hands back stated in its text. Use
+  most 4,000 characters, with its required inputs, the output it hands back, and the receiving
+  reference or instruction section stated in its text. Use
   `{{snake_case}}` only for values the user supplies every run; never
   `{{previous_output}}`.
 - **Scripts**: on the line that names a script, say when to run it (or read
@@ -98,18 +100,70 @@ Any shape whose instructions you write yourself runs `agent_driven`.
 - **Assets**: each one has a line saying when to use it. No secrets or
   personal data.
 
+## References, Checkpoints, Loops, And Handoffs
+
+Define every reference explicitly in the instructions: exact relative path,
+title, purpose, when to read it, inputs, and output. Use the paths supplied by
+the authoring brief or the existing skill. AirPrompter assigns filenames,
+resolves title collisions, and preserves stored names across renames: do not
+guess a path from a title or send `exportFile` as a client field. Reference
+bodies belong in `prompts[]`, not as duplicate files in `skill.files`.
+An instructions-only skill needs no reference list. Keep branch-specific
+references conditional; a list of files does not make every file mandatory.
+
+Write checkpoints as Markdown `- [ ]` items with observable pass conditions.
+Mark a checkpoint complete only from evidence in the current run; track it
+in the chat, never by updating the saved skill. At each handoff name the
+producer (a reference or instruction section), the output passed on, the
+receiver, and the condition that allows the receiver to start. State where
+to pause for missing input or required user approval.
+
+Only if the job needs a loop, name its entry, check, pass exit, fail/back
+target, task-appropriate finite retry bound, and the outcome to report when
+that bound is reached. Reset affected checkpoints after a repair; earlier
+passes on changed work no longer count. Do not invent a loop for a one-pass
+job, or retry an outside effect without checking its outcome and the required
+authorization. These are authoring practices, not new server save refusals.
+
+### Example (made up)
+
+This fictional edit-and-review skill has two references with these exact
+supplied paths. Its two-repair bound is illustrative, not a default for other
+skills.
+
+- references/draft.md — Draft: read first or after a failed review; input is
+  the request plus any review findings; output is one revised draft.
+- references/review.md — Review: read after Draft; input is that draft and
+  the request; output is pass/fail plus concrete findings.
+
+- [ ] Draft checkpoint: the draft addresses every requirement. Pass that
+  draft and the request from Draft to Review only when both are available.
+- [ ] Review checkpoint: no unmet requirement remains. On pass, hand the
+  approved draft from Review to the Output section for delivery.
+
+Loop: enter at Draft; check at Review. On failure, send Review's findings and
+the draft back to Draft, clear both checkpoints, and review the repair again.
+Allow at most two repairs. On exhaustion, stop and report the unresolved
+findings. Pause if a required request detail is missing. This writing skill
+has no outside action to approve.
+
 ## Verify Before Saving
 
-- Every `{…}` part of a template is filled in.
-- Every step, script, and asset is mentioned in the instructions or in the
+- [ ] Every `{…}` part of a template is filled in.
+- [ ] Every step, script, and asset is mentioned in the instructions or in the
   step that uses it.
-- Every script line says what the script returns.
-- "Step N" is cited only for steps that exist.
-- Every file path a step names is in `skill.files`, and every need in
+- [ ] Every script line says what the script returns.
+- [ ] "Step N" is cited only for steps that exist.
+- [ ] Every script or asset path a step names is in `skill.files`, and every need in
   `skill.requires`.
-- Every `{{variable}}` is a value the user supplies each run.
+- [ ] Every `{{variable}}` is a value the user supplies each run.
+- [ ] Every reference uses its exact supplied path, with a read condition,
+  inputs and output; handoffs name their payload, receiver and start condition.
+- [ ] Checkpoints define their pass evidence, and any needed loop has an
+  explicit target, finite bound, pass exit and exhausted outcome.
 
-Check these yourself. "Step N" means reference N; number other procedure lines
+Check these yourself; reference definitions, checkpoint evidence, loops and
+handoffs are author self-checks, not additional server save gates. "Step N" means reference N; number other procedure lines
 without the word "Step". A `save_workflow` that carries the skill's own
 instructions returns them as `skillFindings` and is refused on a Fix it adds.
 The import door does not refuse on them: `preview_skill_import` lists them as

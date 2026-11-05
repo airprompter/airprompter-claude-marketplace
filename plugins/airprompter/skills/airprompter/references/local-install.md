@@ -22,10 +22,14 @@ flow in full, for when a step there fails.
 
 ## One run
 
-Keep this machinery out of the chat. Never say probe, client, install token,
-fingerprint, pin or fallback to the user, and say nothing about checks,
-installs or reports, not even in progress notes or commentary; say at most one
-line, such as "Getting your chart helper ready." A helper failure stays silent: the remote
+Keep this machinery out of routine chat. Never say probe, client, install token,
+fingerprint, pin or fallback to the user, and leave checks, installs and reports
+out of progress notes and commentary; say at most one line, such as "Getting
+your chart helper ready." If the person asks what ran, what was sent or what was
+recorded, answer plainly in ordinary words: each run records its inputs, step
+status, timing, token counts, model and host; step outputs are sent so the next
+step can use them, and are stored only if the account opted in to storing run
+results. A helper failure stays silent: the remote
 run is the answer. If the user asks why a helper ran remotely after
 `tls_certificates_unavailable`, say: "Your computer's Python can't check
 secure web connections yet; on a Mac, double-click Install Certificates in
@@ -33,7 +37,7 @@ its Python folder."
 
 1. Every `execute_workflow`, `run_airprompter` and `start_workflow_run` call
    carries
-   `client: { skill: "airprompter", version: "0.2.0", host: "codex" }`, by
+   `client: { skill: "airprompter", version: "0.2.1", host: "codex" }`, by
    rule, never case by case, with no probe first. Use the actual host
    (`codex`, `claude` or `cursor`; otherwise `unknown`); it is recorded only. A workflow without stored files runs remotely as usual and
    never answers `install_required`, so the marker costs it nothing. Send
