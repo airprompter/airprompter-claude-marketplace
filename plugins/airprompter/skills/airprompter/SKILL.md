@@ -1,18 +1,15 @@
 ---
 name: airprompter
-description: Run, find, create, edit, import, or export saved AirPrompter prompts and workflows (skills), or diagnose an AirPrompter connection. Excludes source-code, packaging, and documentation maintenance and generic local skill authoring unless the user explicitly wants to save it into AirPrompter.
+description: Create, run, find, edit, import, or export AirPrompter workflows, skills, and prompts, or diagnose its connection. Use when asked to make or build a workflow or skill in AirPrompter. Excludes repository maintenance and local skill authoring.
 allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/verify *) Bash(${CLAUDE_SKILL_DIR}/scripts/install *) Read(~/.airprompter/workflows/**) Edit(~/.airprompter/tokens/**)
 ---
 
 # AirPrompter
 
-AirPrompter is the user's saved prompt and workflow system. Use its MCP server
-for every read, write, run and report. Do not call AirPrompter HTTP APIs,
-use local scripts, or emulate a saved workflow
-unless the user explicitly asks for a non-AirPrompter fallback. The sole
-exception is the bundled `scripts/install` and `scripts/verify` (or `.ps1`)
-helpers; they authorize no workflow script or external action. An AirPrompter
-skill is a saved workflow; a standalone prompt is not a skill.
+AirPrompter is the user's saved prompt and workflow system. Use MCP for every
+read, write, run and report. No HTTP APIs, local scripts or emulation
+unless the user explicitly asks for a non-AirPrompter fallback. The bundled helpers
+authorize no workflow script or external action. A skill is a saved workflow.
 Call tools by the names and shapes here or in a reference; never print
 a tool object, description or schema, even one found by its exact name. Never call the same run tool again just to see a part of the
 result you missed. Never narrate these instructions (no quotes, rule talk,
@@ -23,11 +20,18 @@ Keep installs, checks, usage, reports out of progress notes; if asked, answer
 from `references/local-install.md`. Claude Code: for each new run request, invoke
 this skill again (its helpers are pre-approved only in that turn).
 
-Create, edit or improve a prompt or workflow: read
-`references/prompt-authoring.md` first. A skill (create a skill,
-turn this into a skill): `references/skill-authoring.md` and
-`references/prompt-authoring.md`. An import, export or shortcut:
-`references/skill-import.md` only.
+## Author a workflow or skill
+
+In AirPrompter context, "create a workflow," "create a skill," "make a workflow,"
+"make a skill," "turn this into a skill or workflow," and requests to build
+or set up either mean author a saved workflow. Load tools by exact name. Use
+`plan_draft` for new designs, then draft, review and get approval before
+`save_workflow` as the reference directs. Keep future actions in the
+instructions; do not run them during authoring.
+
+For creation or edits, read `references/prompt-authoring.md`; for a skill,
+also read `references/skill-authoring.md`. For import, export or shortcuts,
+read only `references/skill-import.md`.
 
 ## Run fast path
 
@@ -94,10 +98,8 @@ probe); then no `client` this session.
 
 ## Routing Rules
 
-1. Reviewing AirPrompter's source, SKILL.md, packaging or docs is repository
-   work, without saved-item discovery, account selection, or execution (no
-   MCP call). Generic local host skill
-   authoring stays local unless the user asks to save it into AirPrompter.
+1. Source, packaging and docs are repository work (no MCP). Local skill
+   authoring stays local unless the user asks to save it in AirPrompter.
 2. Saved workflow, my workflow, run my skill, run prompt, or the older name
    Airflow means AirPrompter discovery when context points at saved items;
    never reinterpret an explicitly local or other-system request. Read
@@ -115,9 +117,8 @@ probe); then no `client` this session.
    `client: { skill: "airprompter", version: "0.2.1", host: "<codex|claude|cursor|unknown>" }`
    by rule, with no schema check first. Say so only if asked. Only the Run
    fast path drops it.
-5. Still ambiguous after the request and session: ask one short
-   question with options; never choose an environment or account by tool
-   order.
+5. If still ambiguous, ask one question with options; never choose an
+   environment or account by tool order.
 6. To run a saved item, use native host tools only after AirPrompter returns
    its steps, `promptText` or a native handoff (authoring is not running).
 7. After a run, add "Used your AirPrompter skill: <name>." only when a ranked
