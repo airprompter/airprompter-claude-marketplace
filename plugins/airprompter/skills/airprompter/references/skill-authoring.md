@@ -35,7 +35,7 @@ supplied the content, go to "Verify Before Saving", confirm as
 
 1. When designing new content, call `plan_draft` as `prompt-authoring.md`
    rule 2 says (target `workflow`; a skill is a workflow), and ask its
-   questions as that rule says. Show the summary and steps, and propose one of
+   questions as that rule says. Show a short preview in the task’s words and propose one of
    the four shapes and say why. Its helpers question asks whether any step
    needs a script or an asset, and what each returns.
 2. Call `generate_draft` with the plan as returned and the answers. Its brief carries the

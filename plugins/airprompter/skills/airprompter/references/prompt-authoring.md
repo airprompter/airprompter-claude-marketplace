@@ -14,10 +14,20 @@ a tool object, description or declaration; these shapes are complete.
    promptType, outputType, platforms, and categories. An edit never plans
    (Update Prompts Or Workflows, below).
 2. `plan_draft({ instruction: "<what the person wants>", target: "workflow" })`
-   (`"prompt"` for one standalone prompt; a skill is a workflow). Ask the
-   questions its answer says to show (at most 3 in all, its helpers question
-   included, in the task's own words; skip any the request already answers)
-   and fill in the rest with its one "I assumed …" line.
+   (`"prompt"` for one standalone prompt; a skill is a workflow). Keep the
+   requested item type and relevant conversation in `instruction`. If the plan
+   returns the wrong target, retry once with the explicit intended target before drafting.
+   Use the established compatible connector and account. If the account is unresolved,
+   start with a provisional preview using only what the person gave you in this
+   conversation. Call it a draft in chat until AirPrompter is available. Ask one
+   friendly destination question before reading any account data or saving. If
+   existing work or team standards are needed for the design, ask that question
+   after a short preview of what you understand so far. Follow `connection-selection.md`.
+   Show a short preview in the task’s own words before asking anything. Use the
+   brief and conversation to answer planning questions, including an explicit
+   success criterion. Ask at most one design question, only if the answer
+   materially changes the result. State any important reversible assumption.
+   Once the account is resolved, use its plan to continue from the preview.
 3. `generate_draft({ target: <the plan's target>, instruction: <the same>,
    plan: <plan_draft's plan, as returned>, answers: "<each answer under its
    question number>" })`; `answersSkipped: true` only when the person declined
@@ -28,15 +38,16 @@ a tool object, description or declaration; these shapes are complete.
    calling agent within the Authoring Thresholds below. Confirm every new save
    (this flow, dictated content unless that message said to save it,
    `create_workflow`, `create_prompt`, `save_prompt_from_output`): show the
-   person the name, a one-line description, each step's title and one-line job,
+   person the name, destination, a one-line description, each step's title and one-line job,
    in order (a one-job skill is one step), the run inputs ({{variables}}) and
-   any reference or helper files by path (a standalone prompt: what it does in
+   any consequential actions, reference or helper files by path (a standalone prompt: what it does in
    one line), then ask whether to save it or change something; save after their
-   yes. Ask once; after a yes, ask again only if a step is added, removed or
-   reordered. A message that already told you to save this exact content is the
-   yes. Wording changes they asked for need no second yes. If the save still
-   asks where to save, ask only that and save with their answer, never a second
-   confirmation. A headless run (`agent_autonomous`, no one to answer) saves
+   yes. Ask once. Confirm again if the destination changes, a step is added,
+   removed or reordered, or a consequential action changes. A message that
+   already told you to save this exact content in a resolved destination is the
+   yes. Wording changes they asked for need no second yes. If the server returns
+   unexpected destinations, ask where to save the previewed content and use the
+   chosen destination. A headless run (`agent_autonomous`, no one to answer) saves
    directly.
 5. After the rule-4 confirmation, save ONCE: `save_workflow({ name,
    description, outputType, prompts: [{ title, description, content,
@@ -123,14 +134,12 @@ The prompt should:
 
 A workflow is an ordered set of prompt steps. When creating a workflow:
 
-- Resolve the destination from user intent and established context. Send named
-  destinations through supported name fields; do not ask for customer ids. When
-  omitted, the server defaults to Personal Library or a Team member's My
-  Private Collection and returns selection choices when needed. Ask where to
-  save, inside the confirmation, only when earlier results this session showed
-  more than one library or Team; otherwise let the save pick its default, and
-  reuse an answered destination for later saves. Saving does not add the
-  workflow to a Playbook.
+- Resolve the destination from user intent and established context before
+  saving. Send named destinations through supported name fields and use friendly
+  labels for choices. Use a known compatible default, such as the Personal
+  Library or My Private Collection. If more than one destination is plausible,
+  ask where to save in the same turn as the preview. Reuse the answer for
+  later saves in the same context. Saving does not add the workflow to a Playbook.
 - Create or select prompt steps in the order they should run.
 - Allow multiple steps with the same type, such as research, refine, research,
   audit, finalize.

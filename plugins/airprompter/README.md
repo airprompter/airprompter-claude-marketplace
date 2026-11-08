@@ -11,23 +11,11 @@ to sign in the first time it uses AirPrompter.
   `https://mcp.airprompter.com/mcp`.
 - `skills/airprompter/` tells Claude how to find, run, create, and update your
   saved prompts and workflows.
-- `skills/airprompter/scripts/` holds the `install` and `verify` helpers, which
-  use only Python 3 and its standard library.
 
 ## What it runs, sends, and fetches
 
 - **MCP server.** Every read, save, and run goes to AirPrompter through the MCP
   server, using the account you signed in with.
-- **Helpers.** When a saved workflow includes scripts or other files, `install`
-  uses a one-time token to fetch them from AirPrompter (`api.airprompter.com`)
-  and saves them in the private folder `~/.airprompter/`. `verify` checks that
-  those files have not changed.
-- **Workflow scripts.** A saved workflow's scripts run on your computer when its
-  steps call them. If you ask for a local copy of a skill, it is saved in your
-  skills folder.
-- **Queued reports.** If a run's report cannot be sent right away, `verify`
-  keeps it in `~/.airprompter/reports/` until it can be sent through the MCP
-  server.
 
 ## What AirPrompter records when you run a workflow
 

@@ -143,10 +143,7 @@ output and requested inputs, never reconstructed server state.
 
 ## Stored files and local execution
 
-The SKILL.md Run fast path sends the `client` marker and handles `run_local`
-and `install_required`; read [local installation](local-install.md) only for a
-helper failure. Probe and verify installed bytes before starting a metered
-local run; helper failure before start uses the existing MCP remote path. Keep the selected
+Follow the MCP run path in SKILL.md. Keep the selected
 connector/account and account-bound receipts through reporting. Never substitute
 an invented script for a stored one. Text steps that need no file can run;
 a step that needs an unavailable file follows the failure path above.
@@ -161,8 +158,7 @@ when the current step needs a file you cannot obtain.
 not the routed remote-transition payload. Follow the returned run mode and
 advertised fields; do not attach whole-local-run success reports to routed
 advance (its `localReport` only reports a failed served step). Once a local
-run exists, report failure/cancellation or queue its account-bound facts as
-[local installation](local-install.md) describes; do not silently start a
+run exists, report failure or cancellation through MCP; do not silently start a
 second remote run. Never send `pendingRunReports` to a tool lacking that field.
 
 ## Behavioral review cases

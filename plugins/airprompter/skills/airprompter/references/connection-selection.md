@@ -3,6 +3,11 @@
 Read this before a saved-item operation or authenticated connection diagnosis
 when connector or account selection is unresolved. Repository maintenance,
 packaging review, and documentation explanation do not require account selection.
+For new designs, give a provisional preview from the conversation when the
+account is unresolved. Resolve the account before calling `plan_draft`, reading
+saved items or preferences, or saving. Planning uses account preferences and
+may sample recent workflows. If the preview needs account data, ask one short
+question after showing what you understand so far.
 
 ## Select three independent dimensions
 
