@@ -9,8 +9,8 @@ through this import.
 ## Required Behavior
 
 - Use AirPrompter MCP. Do not recreate the skill as a local prompt chain.
-- Prefer `files[]` when the host already has skill markdown.
-- Use `sourceUrl` for a public skill link.
+- Use `files[]` when the host already has skill markdown, and
+  `sourceUrl` for a public skill link.
 - Call `preview_skill_import` first. Show fitness notes (`importable`,
   `adapted`, or `skipped`) and unresolved references.
 - Import the files as they are: show the preview's notes and instructions

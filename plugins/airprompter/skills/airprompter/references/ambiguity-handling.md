@@ -19,6 +19,10 @@ Use explicit instructions and established session context before asking anything
   do not repeat account or environment questions already answered.
 - Respect missing permissions or unsupported destinations; do not silently fall
   back to another account, Team, or Personal Library.
+- Collections exist in a Personal Library and in a Team workspace; Playbooks only
+  in a Team. The connection decides the library (`connection-selection.md`,
+  "Personal Library or Team"); ask only when the user's words name the other
+  one, or a create answers "Which library?" and the user has not already said.
 
 ## Selection Format
 

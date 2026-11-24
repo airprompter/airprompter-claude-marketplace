@@ -41,6 +41,27 @@ several accounts, read customer items to guess ownership, or switch to another
 account after an authorization failure. If the named connection/account is
 unavailable, report that mismatch rather than choosing another one.
 
+## Personal Library or Team: the connection decides
+
+A Collection answer with no `workspaceId` is the Personal Library; one with
+`workspaceId` is that Team workspace. Each listed Collection also carries
+`library`: `personal` or `team`.
+
+1. **No Team named:** call the Collection tool with no `workspaceId`, and tell
+   the user the library the first line of the answer names.
+2. **The user's words name the other library than the connection** ("our
+   team's" on a personal connection, "my own" on a Team one), or a create
+   answers "Which library?": ask once unless the user already said which, then
+   use the id AirPrompter returned. Keep the answer for the rest of the
+   conversation.
+3. **Playbooks exist only in a Team.** Changing a Playbook needs AirPrompter
+   connected to the Team. On a sign-in, changing a Team's shared Collections,
+   Playbooks, prompts or workflows is done in the Team's workspace in
+   AirPrompter on the web for now (a Team API key can do it over MCP).
+   `list_playbooks` also answers a signed-in member who names a workspace.
+4. **An id belongs to the answer that returned it.** Never move work between a
+   Personal Library and a Team by guessing.
+
 ## Retain the binding
 
 Keep a session-local association of the selected connector/environment, linked
@@ -100,3 +121,6 @@ routing, authenticated health, or host execution.
 | Direct MCP without wrapper | Use its exact schema; never inject `link_id`. |
 | Authorization failure | Report failure on the selected connection; do not hop to another account. |
 | Intentional switch | Re-discover and validate; old runs remain bound to their original connection. |
+| Collection request, personal connection | Act on the Personal Library with no `workspaceId`; tell the user which library the answer named. |
+| Team words, personal connection | Ask one short question; never create in or move to the other library by guessing. |
+| A create answers "Which library?" | Ask once unless the user already said which; use the id AirPrompter returned for the Personal Library, or, on a sign-in, say a Team's Collection is made in the Team's workspace in AirPrompter on the web for now (a Team API key can do it over MCP). |

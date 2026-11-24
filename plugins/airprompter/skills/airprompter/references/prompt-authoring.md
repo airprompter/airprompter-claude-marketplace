@@ -8,11 +8,17 @@ a tool object, description or declaration; these shapes are complete.
 ## Plan, Draft, Save
 
 1. Plan only NEW content the person wants help designing (a prompt, workflow
-   or skill, one step or many). Content they dictate verbatim uses
+   or skill, one step or many). A complete prompt or template they supply
+   ("save this prompt so I can reuse it") never plans: after the rule-4
+   confirmation, `create_prompt({ title, content, description, promptType,
+   outputType, categories, platforms })` with their text as given.
+   `create_prompt` takes only its own fields: never `creationRouting`, `name`
+   or `scope`. A workflow they dictate verbatim saves with `save_workflow` and
    `creationRouting.mode: user_dictated` with no interview; headless agents use
    `creationRouting.mode: agent_autonomous` with complete per-prompt
-   promptType, outputType, platforms, and categories. An edit never plans
-   (Update Prompts Or Workflows, below).
+   promptType, outputType, platforms, and categories. `creationRouting` belongs
+   to `save_workflow` only. An edit never plans (Update Prompts Or Workflows,
+   below).
 2. `plan_draft({ instruction: "<what the person wants>", target: "workflow" })`
    (`"prompt"` for one standalone prompt; a skill is a workflow). Keep the
    requested item type and relevant conversation in `instruction`. If the plan
@@ -47,12 +53,23 @@ a tool object, description or declaration; these shapes are complete.
    already told you to save this exact content in a resolved destination is the
    yes. Wording changes they asked for need no second yes. If the server returns
    unexpected destinations, ask where to save the previewed content and use the
-   chosen destination. A headless run (`agent_autonomous`, no one to answer) saves
+   chosen destination. Never pick a Team or Library for the user: when
+   AirPrompter asks where to save, ask them once per conversation and wait,
+   then reuse that answer. To share with a team,
+   ask which Team workspace by name. `save_workflow` takes the name;
+   `create_prompt` takes the `workspaceId` from AirPrompter output that names
+   that workspace (`diagnose_connection`'s binding, or `list_workflows` for that
+   Team, which names each workflow's Playbook). Never ask the person for an id,
+   and never reuse an id from an unrelated item. It is shared only in a
+   workspace they can edit, on a connection to that Team, then reviewed before
+   the team uses it; otherwise it stays private, so never call it shared. An
+   item already saved is shared on AirPrompter (copy it to a workspace there),
+   never by saving a new copy through these tools. A headless run (`agent_autonomous`, no one to answer) saves
    directly.
 5. After the rule-4 confirmation, save ONCE: `save_workflow({ name,
    description, outputType, prompts: [{ title, description, content,
-   promptType, outputType, platforms, categories }], creationRouting: { mode: "host_planned", interviewSummary: "<one
-   paragraph>", planToken: <the plan's planToken when it has one> }, skill:
+   promptType, outputType, platforms, categories }], creationRouting: { mode: "host_planned",
+   planToken: <the plan's planToken when it has one> }, skill:
    {…} only for a skill })`; one standalone prompt saves with `create_prompt`.
    These planning tools are read-only, available on every tier, call no
    model, and consume no credit.
@@ -140,6 +157,9 @@ A workflow is an ordered set of prompt steps. When creating a workflow:
   Library or My Private Collection. If more than one destination is plausible,
   ask where to save in the same turn as the preview. Reuse the answer for
   later saves in the same context. Saving does not add the workflow to a Playbook.
+- A Collection named in a save must already exist. If AirPrompter cannot find
+  it, offer to create it with `create_collection`, then save again with the
+  `collectionId` it returned. Never create one the user did not ask for.
 - Create or select prompt steps in the order they should run.
 - Allow multiple steps with the same type, such as research, refine, research,
   audit, finalize.
